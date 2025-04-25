@@ -51,7 +51,7 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
 
   return (
     <main className="min-h-screen pt-36 px-4 md:px-8">
-      <h1 className="text-4xl font-bold text-center mb-8 text-cyan-600">Śledzenie wydatków</h1>
+      <h1 className="text-2xl sm:text-4xl font-bold text-center mb-8 text-cyan-600">Śledzenie wydatków</h1>
       <Summary dateFrom={dateFrom} dateTo={dateTo} total={total} />
       <FilterSection dateFrom={dateFrom} dateTo={dateTo} setDateFrom={setDateFrom} setDateTo={setDateTo} />
       <ExpenseForm

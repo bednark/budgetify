@@ -5,7 +5,7 @@ interface IExpensesTableProps {
 }
 
 const ExpenseTable = ({ expenses }: IExpensesTableProps) => (
-  <div className="overflow-auto max-h-full w-full mx-auto h-96">
+  <div className="overflow-auto w-[calc(100vw-50px)] sm:w-full h-96 mx-auto">
     <table className="w-full table-auto border border-gray-700 text-white">
       <thead className="bg-gray-800">
         <tr>
