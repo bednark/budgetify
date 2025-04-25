@@ -1,7 +1,12 @@
 export interface IExpense {
-  id?: number;
+  _id?: string;
   name: string;
   price: number;
   category: string;
   date: string;
+}
+
+export interface ICategory {
+  _id?: string;
+  name: string;
 }

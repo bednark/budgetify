@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FilterSection from "@/components/expenses/filter-section/FilterSection";
 import Summary from "@/components/expenses/summary/Summary";
 import ExpenseForm from "@/components/expenses/expense-form/ExpenseForm";
 import ExpenseTable from "@/components/expenses/expenses-table/ExpensesTable";
-import { IExpense } from "@/lib/types";
+import { ICategory, IExpense } from "@/lib/types";
 
 interface IExpensesProps {
-  categories: string[];
+  categories: ICategory[];
   expensesList: IExpense[];
   firstDay: string;
   lastDay: string;
@@ -19,7 +19,7 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
   const [formData, setFormData] = useState<IExpense>({
     name: "",
     price: 0,
-    category: categories[0],
+    category: "",
     date: "",
   });
 
@@ -33,7 +33,6 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
     const newExpense: IExpense = {
-      id: Date.now(),
       ...formData,
       price: formData.price,
     };
@@ -41,7 +40,7 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
     setFormData({
       name: "",
       price: 0,
-      category: categories[0],
+      category: "",
       date: "",
     });
   };

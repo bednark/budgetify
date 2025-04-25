@@ -1,10 +1,10 @@
-import { IExpense } from "@/lib/types";
+import { ICategory, IExpense } from "@/lib/types";
 
 interface IExpenseFormProps {
   formData: IExpense;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleAdd: (e: React.FormEvent) => void;
-  categories: string[];
+  categories: ICategory[] | number;
 }
 
 const ExpenseForm = ({ formData, handleChange, handleAdd, categories }: IExpenseFormProps) => (
@@ -36,11 +36,12 @@ const ExpenseForm = ({ formData, handleChange, handleAdd, categories }: IExpense
       onChange={handleChange}
       className="border border-gray-300 rounded px-4 py-2"
     >
-      {categories.map((c) => (
-        <option key={c} value={c}>
-          {c}
-        </option>
-      ))}
+      {Array.isArray(categories) &&
+        categories.map((c: ICategory) => (
+          <option key={c._id} value={c._id}>
+            {c.name}
+          </option>
+        ))}
     </select>
     <input
       name="data"
