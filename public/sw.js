@@ -2,21 +2,21 @@ importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox
 
 if (workbox) {
   workbox.precaching.precacheAndRoute([
-    { url: "/", revision: null },
     { url: "/offline", revision: null },
     { url: "/favicon.ico", revision: null },
-    { url: "manifest.webmanifest", revision: null },
+    { url: "/manifest.webmanifest", revision: null },
     { url: "/icons/android-chrome-192x192.png", revision: null },
     { url: "/icons/android-chrome-512x512.png", revision: null }
   ]);
 
   workbox.routing.registerRoute(
     ({ url }) => url.pathname.startsWith("/_next/static/"),
-    new workbox.strategies.CacheFirst({
+    new workbox.strategies.StaleWhileRevalidate({
       cacheName: "static-resources",
       plugins: [
         new workbox.expiration.ExpirationPlugin({
           maxEntries: 50,
+          maxAgeSeconds: 60 * 60 * 24 * 30
         }),
       ],
     })
@@ -24,8 +24,14 @@ if (workbox) {
 
   workbox.routing.registerRoute(
     ({ request }) => request.mode === "navigate",
-    new workbox.strategies.NetworkFirst({
+    new workbox.strategies.StaleWhileRevalidate({
       cacheName: "pages",
+      plugins: [
+        new workbox.expiration.ExpirationPlugin({
+          maxEntries: 50,
+          maxAgeSeconds: 60 * 60 * 24 * 7
+        }),
+      ],
     })
   );
 
@@ -37,5 +43,5 @@ if (workbox) {
   });
 
 } else {
-  console.error("Failed to load Workbox. No offline support.");
+  console.error("Workbox failed to load");
 }

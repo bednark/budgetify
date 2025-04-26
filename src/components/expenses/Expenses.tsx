@@ -33,6 +33,12 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
 
   const handleAdd = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
+
+    if (!navigator.onLine) {
+      alert("You are offline. Please connect to the internet to add a new expense.");
+      return;
+    }
+
     const newExpense: IExpense = {
       ...formData,
       price: formData.price,
