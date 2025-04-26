@@ -19,7 +19,7 @@ const expensesSchema = new mongoose.Schema({
     type: Date,
     required: true
   }
-});
+}, { versionKey: false });
 
 const categoriesSchema = new mongoose.Schema({
   name: {
@@ -27,7 +27,7 @@ const categoriesSchema = new mongoose.Schema({
     required: true,
     max: 20
   },
-});
+}, { versionKey: false });
 
 export const ExpensesModel = mongoose.models.Expenses || mongoose.model("Expenses", expensesSchema, "expenses");
 export const CategoriesModel = mongoose.models.Categories || mongoose.model("Categories", categoriesSchema, "categories");

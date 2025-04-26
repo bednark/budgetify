@@ -6,6 +6,7 @@ import Summary from "@/components/expenses/summary/Summary";
 import ExpenseForm from "@/components/expenses/expense-form/ExpenseForm";
 import ExpenseTable from "@/components/expenses/expenses-table/ExpensesTable";
 import { ICategory, IExpense } from "@/lib/types";
+import { addExpense } from "@/lib/actions";
 
 interface IExpensesProps {
   categories: ICategory[];
@@ -18,9 +19,9 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
   const [expenses, setExpenses] = useState<IExpense[]>(expensesList);
   const [formData, setFormData] = useState<IExpense>({
     name: "",
-    price: 0,
-    category: "",
-    date: "",
+    price: "",
+    category: categories[0].name,
+    date: new Date().toISOString().split("T")[0]
   });
 
   const [dateFrom, setDateFrom] = useState<string>(firstDay);
@@ -30,19 +31,23 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAdd = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     const newExpense: IExpense = {
       ...formData,
       price: formData.price,
     };
-    setExpenses([newExpense, ...expenses]);
+
     setFormData({
       name: "",
-      price: 0,
-      category: "",
-      date: "",
+      price: "",
+      category: categories[0].name,
+      date: new Date().toISOString().split("T")[0]
     });
+    
+    const addedExpense: string = await addExpense(newExpense);
+    newExpense._id = addedExpense;
+    setExpenses([newExpense, ...expenses]);
   };
 
   let filteredExpenses: IExpense[] = [];
@@ -50,7 +55,10 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
   if (Array.isArray(expenses)) {
     filteredExpenses = expenses.filter((item: IExpense) => item.date >= dateFrom && item.date <= dateTo);
   }
-  const total = filteredExpenses.reduce((sum, item) => sum + item.price, 0);
+  const total = filteredExpenses
+  .reduce((sum, item) => sum + (typeof item.price === "number" ? item.price : parseFloat(item.price)), 0)
+  .toFixed(2);
+
 
   return (
     <main className="min-h-screen pt-36 px-4 md:px-8">

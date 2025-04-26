@@ -1,7 +1,7 @@
 export interface IExpense {
   _id?: string;
   name: string;
-  price: number;
+  price: number | string;
   category: string;
   date: string;
 }

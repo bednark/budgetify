@@ -19,7 +19,7 @@ const ExpenseTable = ({ expenses }: IExpensesTableProps) => (
         {expenses.map(({ _id, name, price, category, date }) => (
           <tr key={_id} className="bg-gray-900 even:bg-gray-800">
             <td className="px-6 py-3 border-b whitespace-normal break-words">{name}</td>
-            <td className="px-6 py-3 border-b whitespace-normal break-words">{price.toFixed(2)}</td>
+            <td className="px-6 py-3 border-b whitespace-normal break-words">{price}</td>
             <td className="px-6 py-3 border-b whitespace-normal break-words">{category}</td>
             <td className="px-6 py-3 border-b whitespace-normal break-words">{date}</td>
           </tr>
