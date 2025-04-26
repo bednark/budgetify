@@ -29,11 +29,11 @@ const NavBar = () => {
               Strona główna
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link href="/wydatki" className="hover:text-cyan-400 transition">
               Wydatki
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
 
@@ -44,9 +44,9 @@ const NavBar = () => {
           <Link href="/" onClick={closeNavbar} className="hover:text-cyan-400">
             Strona główna
           </Link>
-          <Link href="/wydatki" onClick={closeNavbar} className="hover:text-cyan-400">
+          {/* <Link href="/wydatki" onClick={closeNavbar} className="hover:text-cyan-400">
             Wydatki
-          </Link>
+          </Link> */}
         </div>
       )}
     </nav>
