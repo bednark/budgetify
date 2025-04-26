@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FilterSection from "@/components/expenses/filter-section/FilterSection";
 import Summary from "@/components/expenses/summary/Summary";
 import ExpenseForm from "@/components/expenses/expense-form/ExpenseForm";
@@ -45,7 +45,11 @@ const Expenses = ({ categories, expensesList, firstDay, lastDay }: IExpensesProp
     });
   };
 
-  const filteredExpenses = expenses.filter((item) => item.date >= dateFrom && item.date <= dateTo);
+  let filteredExpenses: IExpense[] = [];
+
+  if (Array.isArray(expenses)) {
+    filteredExpenses = expenses.filter((item: IExpense) => item.date >= dateFrom && item.date <= dateTo);
+  }
   const total = filteredExpenses.reduce((sum, item) => sum + item.price, 0);
 
   return (

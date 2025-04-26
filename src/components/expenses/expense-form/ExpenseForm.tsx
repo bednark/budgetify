@@ -4,7 +4,7 @@ interface IExpenseFormProps {
   formData: IExpense;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   handleAdd: (e: React.FormEvent) => void;
-  categories: ICategory[] | number;
+  categories: ICategory[];
 }
 
 const ExpenseForm = ({ formData, handleChange, handleAdd, categories }: IExpenseFormProps) => (
