@@ -45,7 +45,7 @@ const ExpensesLineChart = ({ data }: ExpensesLineChartProps) => {
       },
       tooltip: {
         callbacks: {
-          label: function (context: any) {
+          label: function (context) {
             return `Wydatki: ${context.parsed.y} zł`;
           },
         },

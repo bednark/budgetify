@@ -1,44 +1,62 @@
 "use client";
 
-import { ICategoryWithTotal, IExpensesGroupedByDay } from "@/lib/types";
+import { ICategoryWithTotal, IExpensesGroupedByDay, IExpense } from "@/lib/types";
 import ExpensesPieChart from "@/components/dashboard/expenses-pie-chart/ExpensesPieChart";
 import ExpensesLineChart from "@/components/dashboard/expenses-line-chart/ExpensesLineChart";
-import { useState, useEffect } from "react";
-import { fetchExpensesGroupedByCategory, fetchExpensesGroupedByDay } from "@/lib/actions";
+import { useState } from "react";
 
 interface IDashboardProps {
+  expensesList: IExpense[];
   firstDay: string;
   lastDay: string;
 }
 
-const Dashboard = ({ firstDay, lastDay }: IDashboardProps) => {
+const Dashboard = ({ expensesList, firstDay, lastDay }: IDashboardProps) => {
   const [dateFrom, setDateFrom] = useState<string>(firstDay);
   const [dateTo, setDateTo] = useState<string>(lastDay);
-  const [expensesGroupedByCategory, setExpensesGroupedByCategory] = useState<ICategoryWithTotal[]>([]);
-  const [expensesGroupedByDay, setExpensesGroupedByDay] = useState<IExpensesGroupedByDay[]>([]);
-  const totalExpenses = expensesGroupedByCategory.reduce((sum, item) => sum + item.total, 0);
+  const [filteredExpenses, setFilteredExpenses] = useState<IExpense[]>(expensesList);
 
-  useEffect(() => {
-    const loadData = async () => {
-      const categories = await fetchExpensesGroupedByCategory(firstDay, lastDay);
-      const days = await fetchExpensesGroupedByDay(firstDay, lastDay);
-      setExpensesGroupedByCategory(categories);
-      setExpensesGroupedByDay(days);
-    };
-    loadData();
-  }, []);
+  const handleFilter = () => {
+    const filtered = expensesList.filter((expense) => {
+      const expenseDate = expense.date.split("T")[0];
+  
+      return expenseDate >= dateFrom && expenseDate <= dateTo;
+    });
+  
+    setFilteredExpenses(filtered);
+  };
 
-  const handleFilter = async (): Promise<void> => {
-    if (dateFrom > dateTo) {
-      alert("Data 'Od' nie może być późniejsza niż data 'Do'.");
-      return;
+  const expensesGroupedByCategory: ICategoryWithTotal[] = filteredExpenses.reduce((acc, expense) => {
+    const category = expense.category;
+    const price = Number(expense.price);
+
+    const existingCategory = acc.find((item) => item.category === category);
+
+    if (existingCategory) {
+      existingCategory.total += price;
+    } else {
+      acc.push({ category, total: price });
     }
 
-    const categories = await fetchExpensesGroupedByCategory(dateFrom, dateTo);
-    const days = await fetchExpensesGroupedByDay(dateFrom, dateTo);
-    setExpensesGroupedByCategory(categories);
-    setExpensesGroupedByDay(days);
-  };
+    return acc;
+  }, [] as ICategoryWithTotal[]);
+
+  const expensesGroupedByDay: IExpensesGroupedByDay[] = filteredExpenses.reduce((acc, expense) => {
+    const date = expense.date.split("T")[0];
+    const price = Number(expense.price);
+
+    const existingDate = acc.find((item) => item.date === date);
+
+    if (existingDate) {
+      existingDate.total += price;
+    } else {
+      acc.push({ date, total: price });
+    }
+
+    return acc;
+  }, [] as IExpensesGroupedByDay[]);
+
+  const totalExpenses = expensesGroupedByCategory.reduce((sum, item) => sum + item.total, 0);
 
   return (
     <div className="flex flex-col items-center justify-start pt-20 px-4 md:px-8">
@@ -75,13 +93,22 @@ const Dashboard = ({ firstDay, lastDay }: IDashboardProps) => {
       </div>
 
       <div className="flex flex-col md:flex-row w-full max-w-7xl gap-8">
-        <div className="w-full h-[350px] sm:h-[450px] md:h-[500px]">
-          <ExpensesPieChart data={expensesGroupedByCategory} />
-        </div>
-        <div className="w-full h-[350px] sm:h-[450px] md:h-[500px]">
-          <ExpensesLineChart data={expensesGroupedByDay} />
-        </div>
+  {expensesGroupedByCategory.length === 0 && expensesGroupedByDay.length === 0 ? (
+    <div className="flex items-center justify-center w-full h-[350px] sm:h-[450px] md:h-[500px] text-gray-500 text-center text-lg">
+      Brak danych do wyświetlenia
+    </div>
+  ) : (
+    <>
+      <div className="w-full h-[350px] sm:h-[450px] md:h-[500px]">
+        <ExpensesPieChart data={expensesGroupedByCategory} />
       </div>
+      <div className="w-full h-[350px] sm:h-[450px] md:h-[500px]">
+        <ExpensesLineChart data={expensesGroupedByDay} />
+      </div>
+    </>
+  )}
+</div>
+
     </div>
   );
 };
