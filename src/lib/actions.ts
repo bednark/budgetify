@@ -1,6 +1,6 @@
 "use server";
 
-import { IExpense } from "@/lib/types";
+import { IExpense, ICategoryWithTotal, IExpensesGroupedByDay } from "@/lib/types";
 import { ExpensesModel } from "@/lib/models";
 import connectToDatabase from "@/lib/utils";
 import { revalidatePath } from "next/cache";
@@ -41,3 +41,73 @@ export const addExpense = async (expense: IExpense): Promise<string> => {
     return "error";
   }
 }
+
+export const fetchExpensesGroupedByCategory = async (firstDay: string, lastDay: string): Promise<ICategoryWithTotal[]> => {
+  try {
+    await connectToDatabase();
+
+    const expenses = await ExpensesModel.aggregate([
+      {
+        $match: {
+          date: {
+            $gte: new Date(firstDay),
+            $lte: new Date(lastDay),
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$category",
+          total: { $sum: "$price" },
+        },
+      }
+    ]);
+
+    return expenses.map((expense) => ({
+      category: expense._id,
+      total: expense.total,
+    }));
+  }
+  catch (error) {
+    console.error("Error connecting to database:", error);
+    return [];
+  }
+}
+
+export const fetchExpensesGroupedByDay = async (firstDay: string, lastDay: string): Promise<IExpensesGroupedByDay[]> => {
+  try {
+    await connectToDatabase();
+
+    const expenses = await ExpensesModel.aggregate([
+      {
+        $match: {
+          date: {
+            $gte: new Date(firstDay),
+            $lte: new Date(lastDay),
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$date",
+              timezone: "Europe/Warsaw"
+            }
+          },
+          total: { $sum: "$price" },
+        },
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    return expenses.map((expense) => ({
+      date: expense._id,
+      total: expense.total,
+    }));
+  } catch (error) {
+    console.error("Error connecting to database:", error);
+    return [];
+  }
+};

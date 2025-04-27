@@ -34,7 +34,7 @@ const RootLayout = ({
         <SwRegister />
         <div className="flex flex-col min-h-screen w-full">
           <NavBar />
-          <div className="flex-grow max-w-7xl mx-auto py-6">
+          <div className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             {children}
           </div>
           <Footer />

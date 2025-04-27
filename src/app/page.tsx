@@ -1,9 +1,12 @@
 import Dashboard from "@/components/dashboard/Dashboard";
+import { getCurrentMonthRange } from "@/lib/functions";
 
-const Home = async () => {
+const Home = () => {
+  const { firstDay, lastDay }: { firstDay: string; lastDay: string } = getCurrentMonthRange();
+
   return (
     <>
-      <Dashboard />
+      <Dashboard firstDay={firstDay} lastDay={lastDay} />
     </>
   );
 };
