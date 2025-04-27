@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "@/components/nav-bar/NavBar";
 import Footer from "@/components/footer/Footer";
 import SwRegister from "@/components/sw-register/SwRegister";
+import Provider from "@/components/provider/Provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +33,15 @@ const RootLayout = ({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SwRegister />
-        <div className="flex flex-col min-h-screen w-full">
-          <NavBar />
-          <div className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            {children}
+        <Provider>
+          <div className="flex flex-col min-h-screen w-full">
+            <NavBar />
+            <div className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              {children}
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
+        </Provider>
       </body>
     </html>
   );

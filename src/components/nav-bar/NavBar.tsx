@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { FaBars, FaXmark } from "react-icons/fa6";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 const NavBar = () => {
   const [navbarOpen, setNavbarOpen] = useState<boolean>(false);
+  const { data: session, status } = useSession();
 
   const toggleNavbar = (): void => setNavbarOpen(!navbarOpen);
   const closeNavbar = (): void => setNavbarOpen(false);
@@ -17,24 +19,50 @@ const NavBar = () => {
           Budgetify
         </Link>
 
-        <div className="md:hidden mt-2">
-          <button onClick={toggleNavbar} aria-label="Toggle menu" className="text-2xl">
-            {navbarOpen ? <FaXmark /> : <FaBars />}
-          </button>
-        </div>
+        <div className="flex items-center gap-6">
+          <ul className="hidden md:flex space-x-8 text-lg items-center">
+            <li>
+              <Link href="/" className="hover:text-cyan-400 transition">
+                Strona główna
+              </Link>
+            </li>
+            <li>
+              <Link href="/wydatki" className="hover:text-cyan-400 transition">
+                Wydatki
+              </Link>
+            </li>
 
-        <ul className="hidden md:flex space-x-8 text-lg">
-          <li>
-            <Link href="/" className="hover:text-cyan-400 transition">
-              Strona główna
-            </Link>
-          </li>
-          <li>
-            <Link href="/wydatki" className="hover:text-cyan-400 transition">
-              Wydatki
-            </Link>
-          </li>
-        </ul>
+            {status === "loading" ? (
+              <li className="text-sm text-gray-400 italic">
+                Ładowanie...
+              </li>
+            ) : session ? (
+              <>
+                <li className="text-sm text-gray-300">
+                  Zalogowano jako <span className="font-semibold">{session.user?.name || session.user?.email}</span>
+                </li>
+                <li>
+                  <button
+                    onClick={() => signOut()}
+                    className="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-1 text-sm"
+                  >
+                    Wyloguj się
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li className="text-sm text-gray-400 italic">
+                Jesteś offline.
+              </li>
+            )}
+          </ul>
+
+          <div className="md:hidden mt-2">
+            <button onClick={toggleNavbar} aria-label="Toggle menu" className="text-2xl">
+              {navbarOpen ? <FaXmark /> : <FaBars />}
+            </button>
+          </div>
+        </div>
       </div>
 
       {navbarOpen && (
@@ -47,6 +75,29 @@ const NavBar = () => {
           <Link href="/wydatki" onClick={closeNavbar} className="hover:text-cyan-400">
             Wydatki
           </Link>
+
+          {status === "loading" ? (
+            <div className="text-gray-400 text-sm italic">Ładowanie...</div>
+          ) : session ? (
+            <>
+              <div className="text-center text-gray-300 text-sm">
+                Zalogowano jako <span className="font-semibold">{session.user?.name || session.user?.email}</span>
+              </div>
+              <button
+                onClick={() => {
+                  signOut();
+                  closeNavbar();
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white rounded px-4 py-2 text-sm"
+              >
+                Wyloguj się
+              </button>
+            </>
+          ) : (
+            <div className="text-gray-400 text-sm italic">
+              Jesteś offline.
+            </div>
+          )}
         </div>
       )}
     </nav>
