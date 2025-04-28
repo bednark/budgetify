@@ -56,6 +56,31 @@ if (workbox) {
     return Response.error();
   });
 
+  self.addEventListener('push', function(event) {
+    console.log('Odebrano push event:', event);
+  
+    let data = {};
+    try {
+      data = event.data.json();
+    } catch (e) {
+      data = { 
+        title: 'Budgetify', 
+        body: event.data.text()
+      };
+    }
+  
+    const title = data.title || 'Powiadomienie Budgetify';
+    const options = {
+      body: data.body || 'Masz nowe wydarzenie w swoim budżecie!',
+      icon: '/icons/android-chrome-192x192.png',
+      badge: '/icons/android-chrome-192x192.png'
+    };
+  
+    event.waitUntil(
+      self.registration.showNotification(title, options)
+    );
+  });
+
 } else {
-  console.error("Workbox failed to load");
+  console.error("Workbox nie załadował się");
 }

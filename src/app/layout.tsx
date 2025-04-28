@@ -5,6 +5,7 @@ import NavBar from "@/components/nav-bar/NavBar";
 import Footer from "@/components/footer/Footer";
 import SwRegister from "@/components/sw-register/SwRegister";
 import Provider from "@/components/provider/Provider";
+import PushNotificationsClient from "@/components/push-notifications-client/PushNotificationsClient";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ const RootLayout = ({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SwRegister />
+        <PushNotificationsClient />
         <Provider>
           <div className="flex flex-col min-h-screen w-full">
             <NavBar />

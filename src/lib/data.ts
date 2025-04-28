@@ -58,3 +58,24 @@ export const fetchIncomes = async (): Promise<IIncome[]> => {
     return [];
   }
 };
+
+export async function getExpensesForTomorrow() {
+  await connectToDatabase();
+
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  const startOfDay = new Date(tomorrow.setHours(0, 0, 0, 0));
+  const endOfDay = new Date(tomorrow.setHours(23, 59, 59, 999));
+
+  const expenses = await ExpensesModel.find({
+    date: {
+      $gte: startOfDay,
+      $lte: endOfDay
+    },
+    notified: false
+  });
+
+  return expenses;
+}

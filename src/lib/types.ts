@@ -4,6 +4,7 @@ export interface IExpense {
   price: number | string;
   category: string;
   date: string;
+  notified?: boolean;
 }
 
 export interface ICategory {
