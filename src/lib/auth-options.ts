@@ -15,5 +15,15 @@ export const authOptions: NextAuthOptions = {
       clientSecret,
     }),
   ],
+  callbacks: {
+    async signIn({ profile }) {
+      const githubProfile = profile as { login?: string };
+      const allowedUsers = ["bednark"];
+
+      if (githubProfile?.login && allowedUsers.includes(githubProfile?.login)) {
+        return true;
+      }
+      return false;
+    },
+  },
 };
-  

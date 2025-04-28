@@ -2,8 +2,6 @@ importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox
 
 if (workbox) {
   workbox.precaching.precacheAndRoute([
-    { url: "/", revision: null },
-    { url: "/wydatki", revision: null },
     { url: "/offline", revision: null },
     { url: "/favicon.ico", revision: null },
     { url: "/manifest.webmanifest", revision: null },

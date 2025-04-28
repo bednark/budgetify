@@ -43,7 +43,7 @@ const NavBar = () => {
                 </li>
                 <li>
                   <button
-                    onClick={() => signOut()}
+                    onClick={() => signOut({ callbackUrl: "/" })}
                     className="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-1 text-sm"
                   >
                     Wyloguj się
@@ -85,7 +85,7 @@ const NavBar = () => {
               </div>
               <button
                 onClick={() => {
-                  signOut();
+                  signOut({ callbackUrl: "/" });
                   closeNavbar();
                 }}
                 className="bg-red-500 hover:bg-red-600 text-white rounded px-4 py-2 text-sm"
