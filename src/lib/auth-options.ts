@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ profile }) {
       const githubProfile = profile as { login?: string };
-      const allowedUsers = ["bednark"];
+      const allowedUsers = process.env.ALLOWED_USERS?.split(",") || [];
 
       if (githubProfile?.login && allowedUsers.includes(githubProfile?.login)) {
         return true;

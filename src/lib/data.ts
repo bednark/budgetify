@@ -1,6 +1,6 @@
 import connectToDatabase from "@/lib/utils";
-import { CategoriesModel, ExpensesModel } from "@/lib/models";
-import { ICategory, IExpense } from "@/lib/types";
+import { CategoriesModel, ExpensesModel, IncomesModel } from "@/lib/models";
+import { ICategory, IExpense, IIncome } from "@/lib/types";
 import { formatDate } from "@/lib/functions";
 
 export const fetchCategories = async (): Promise<ICategory[]> => {
@@ -32,6 +32,25 @@ export const fetchExpenses = async (): Promise<IExpense[]> => {
       price: expense.price,
       category: expense.category,
       date: formatDate(expense.date),
+    }));
+  }
+  catch (error) {
+    console.error("Error connecting to database:", error);
+    return [];
+  }
+};
+
+export const fetchIncomes = async (): Promise<IIncome[]> => {
+  try {
+    await connectToDatabase();
+
+    const incomes = await IncomesModel.find().sort({ date: -1 });
+
+    return incomes.map((income) => ({
+      _id: income._id.toString(),
+      name: income.name,
+      price: income.price,
+      date: formatDate(income.date),
     }));
   }
   catch (error) {

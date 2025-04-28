@@ -20,7 +20,7 @@ const NavBar = () => {
         </Link>
 
         <div className="flex items-center gap-6">
-          <ul className="hidden md:flex space-x-8 text-lg items-center">
+          <ul className="hidden md:flex space-x-8 text-xs lg:text-base items-center">
             <li>
               <Link href="/" className="hover:text-cyan-400 transition">
                 Strona główna
@@ -29,6 +29,11 @@ const NavBar = () => {
             <li>
               <Link href="/wydatki" className="hover:text-cyan-400 transition">
                 Wydatki
+              </Link>
+            </li>
+            <li>
+              <Link href="/przychody" className="hover:text-cyan-400 transition">
+                Przychody
               </Link>
             </li>
 
@@ -44,7 +49,7 @@ const NavBar = () => {
                 <li>
                   <button
                     onClick={() => signOut({ callbackUrl: "/" })}
-                    className="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-1 text-sm"
+                    className="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-1 text-xs"
                   >
                     Wyloguj się
                   </button>
@@ -67,13 +72,16 @@ const NavBar = () => {
 
       {navbarOpen && (
         <div className="md:hidden bg-gray-800 w-full h-screen flex flex-col
-          items-center justify-center space-y-8 text-xl pb-36"
+          items-center justify-center space-y-8 text-lg pb-36"
         >
           <Link href="/" onClick={closeNavbar} className="hover:text-cyan-400">
             Strona główna
           </Link>
           <Link href="/wydatki" onClick={closeNavbar} className="hover:text-cyan-400">
             Wydatki
+          </Link>
+          <Link href="/przychody" onClick={closeNavbar} className="hover:text-cyan-400">
+            Przychody
           </Link>
 
           {status === "loading" ? (

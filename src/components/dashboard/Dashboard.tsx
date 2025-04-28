@@ -1,17 +1,18 @@
 "use client";
 
-import { ICategoryWithTotal, IExpensesGroupedByDay, IExpense } from "@/lib/types";
+import { ICategoryWithTotal, IExpensesGroupedByDay, IExpense, IIncome } from "@/lib/types";
 import ExpensesPieChart from "@/components/dashboard/expenses-pie-chart/ExpensesPieChart";
 import ExpensesLineChart from "@/components/dashboard/expenses-line-chart/ExpensesLineChart";
 import { useState } from "react";
 
 interface IDashboardProps {
   expensesList: IExpense[];
+  incomesList: IIncome[];
   firstDay: string;
   lastDay: string;
 }
 
-const Dashboard = ({ expensesList, firstDay, lastDay }: IDashboardProps) => {
+const Dashboard = ({ expensesList, incomesList, firstDay, lastDay }: IDashboardProps) => {
   const [dateFrom, setDateFrom] = useState<string>(firstDay);
   const [dateTo, setDateTo] = useState<string>(lastDay);
   const [filteredExpenses, setFilteredExpenses] = useState<IExpense[]>(expensesList);
@@ -57,12 +58,16 @@ const Dashboard = ({ expensesList, firstDay, lastDay }: IDashboardProps) => {
   }, [] as IExpensesGroupedByDay[]);
 
   const totalExpenses = expensesGroupedByCategory.reduce((sum, item) => sum + item.total, 0);
-
+  const totalIncomes = incomesList.reduce((sum, item) => sum + (typeof item.price === "number" ? item.price : parseFloat(item.price)), 0);
+  const totalBalance = totalIncomes - totalExpenses;
+  
   return (
     <div className="flex flex-col items-center justify-start pt-20 px-4 md:px-8">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl md:text-4xl font-bold">Wydatki</h1>
-        <p className="text-lg md:text-2xl text-gray-600 mt-2">Suma: {totalExpenses} zł</p>
+      <div className="text-center mb-6">
+        <h1 className="text-2xl sm:text-4xl font-bold text-center mb-6 text-cyan-600">Statystyki budżetu</h1>
+        <p className="text-lg text-gray-700 font-semibold text-cyan-600">
+          Aktualny bilans: <span className={totalBalance < 0 ? "text-red-500" : ""}>{totalBalance} zł</span>
+        </p>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 items-center md:items-end mb-8">

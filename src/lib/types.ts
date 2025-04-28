@@ -20,3 +20,10 @@ export interface IExpensesGroupedByDay {
   date: string;
   total: number;
 }
+
+export interface IIncome {
+  _id?: string;
+  name: string;
+  price: number | string;
+  date: string;
+}
