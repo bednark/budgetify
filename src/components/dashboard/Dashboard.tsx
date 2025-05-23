@@ -55,7 +55,8 @@ const Dashboard = ({ expensesList, incomesList, firstDay, lastDay }: IDashboardP
     }
 
     return acc;
-  }, [] as IExpensesGroupedByDay[]);
+  }, [] as IExpensesGroupedByDay[])
+  .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const totalExpenses = expensesGroupedByCategory.reduce((sum, item) => sum + item.total, 0);
   const totalIncomes = incomesList.reduce((sum, item) => sum + (typeof item.price === "number" ? item.price : parseFloat(item.price)), 0);
